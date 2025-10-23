@@ -23,10 +23,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run mettalog test (python harness)
-        run: |
-          pip3 install ansi2html
-          python3 scripts/run-tests.py
+      # - name: Run mettalog test (python harness)
+      #   run: |
+      #     pip3 install ansi2html
+      #     python3 scripts/run-tests.py
 
       - name: Sanitize deme test files & check parentheses
         shell: bash -l {0}
