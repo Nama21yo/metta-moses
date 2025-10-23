@@ -31,7 +31,7 @@ jobs:
 
       - name: Sanitize expand-demes test file
         run: |
-          file=metta-moses/deme/tests/expand-demes-test.metta
+          file=metta-moses/deme/tests/merge-demes-test.metta
           if [ -f "$file" ]; then
             if grep -qE 'bind! mega_table|\(mkITable' "$file"; then
               echo "Sanitizing $file (commenting problematic lines matching bind! mega_table or (mkITable)"
@@ -47,7 +47,7 @@ jobs:
       - name: Run expand-demes mettalog
         run: |
           if command -v mettalog >/dev/null 2>&1; then
-            mettalog metta-moses/deme/tests/expand-demes-test.metta
+            mettalog metta-moses/deme/tests/merge-demes-test.metta
           else
             echo "mettalog not found in container"
             exit 1
