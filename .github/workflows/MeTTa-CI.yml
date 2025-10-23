@@ -17,20 +17,20 @@ on:
 jobs:
   setup-and-test:
     runs-on: ubuntu-latest
-    container:
-      image: indominyus/mettalog:latest
+    # remove job-level container to allow running docker run manually
+    # container:
+    #   image: indominyus/mettalog:latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run mettalog test
+      - name: Run mettalog test (python harness)
         run: |
           pip3 install ansi2html
           python3 scripts/run-tests.py
 
       - name: Sanitize deme test files & check parentheses
-        # ensure bash is used (sh doesn't support "set -o pipefail")
         shell: bash -l {0}
         run: |
           set -euo pipefail
@@ -44,27 +44,19 @@ jobs:
               continue
             fi
             echo "Checking $file"
-            # count parentheses
             open_parens=$(grep -o "(" "$file" | wc -l || true)
             close_parens=$(grep -o ")" "$file" | wc -l || true)
             echo "paren counts: ( = $open_parens , ) = $close_parens"
             if [ "$open_parens" -ne "$close_parens" ]; then
-              echo "Unbalanced parentheses detected in $file — attempting to auto-sanitize known problematic patterns"
-              # comment lines that are commonly truncated and break parser
-              sed -E -i 's/^(.*(\!?\s*\(bind!\s+mega_table|\\(mkITable).*)$/; \1/' "$file" || true
-              # also comment any trailing line that looks like an unfinished form (ends with "(mkITable" or contains "mkITable" without closing paren)
-              tail -n 5 "$file"
-              # recompute counts
+              echo "Unbalanced parentheses detected in $file — attempting auto-sanitize"
+              sed -E -i 's/^(.*(\!?\s*\(bind!\s+mega_table|\(mkITable).*)$/; \1/' "$file" || true
+              echo "----- tail -----"
+              tail -n 20 "$file"
               open_parens=$(grep -o "(" "$file" | wc -l || true)
               close_parens=$(grep -o ")" "$file" | wc -l || true)
               echo "after sanitize: ( = $open_parens , ) = $close_parens"
               if [ "$open_parens" -ne "$close_parens" ]; then
-                echo "Auto-sanitize failed for $file. Showing diagnostics:"
-                echo "----- head -----"
-                head -n 80 "$file"
-                echo "----- tail -----"
-                tail -n 120 "$file"
-                echo "Please fix unmatched parentheses or unfinished forms in $file"
+                echo "Auto-sanitize failed for $file, aborting"
                 exit 1
               fi
             else
@@ -72,11 +64,13 @@ jobs:
             fi
           done
 
-      - name: Run expand-demes mettalog
+      - name: Run merge-demes mettalog inside docker
+        # run mettalog inside the container image via docker run to ensure correct environment and mounts
         run: |
-          if command -v mettalog >/dev/null 2>&1; then
-            mettalog metta-moses/deme/tests/merge-demes-test.metta
-          else
-            echo "mettalog not found in container"
-            exit 1
-          fi
+          docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
+            sh -lc "mettalog metta-moses/deme/tests/merge-demes-test.metta" 2>mettalog-merge-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-merge-demes.err && exit 1)
+
+      - name: Run expand-demes mettalog inside docker
+        run: |
+          docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
+            sh -lc "mettalog metta-moses/deme/tests/expand-demes-test.metta" 2>mettalog-expand-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-expand-demes.err && exit 1)
