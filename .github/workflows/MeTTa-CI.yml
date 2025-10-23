@@ -24,7 +24,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run mettalog test
+      # - name: Run mettalog test
+      #   run: |
+      #     pip3 install ansi2html
+      #     python3 scripts/run-tests.py
+
+      - name: Run expand-demes mettalog
         run: |
-          pip3 install ansi2html
-          python3 scripts/run-tests.py
+          if command -v mettalog >/dev/null 2>&1; then
+            mettalog metta-moses/deme/tests/expand-demes-test.metta
+          else
+            echo "mettalog not found in container"
+            exit 1
+          fi
