@@ -17,9 +17,7 @@ on:
 jobs:
   setup-and-test:
     runs-on: ubuntu-latest
-    # remove job-level container to allow running docker run manually
-    # container:
-    #   image: indominyus/mettalog:latest
+    # job-level container removed so we can run the mettalog image via `docker run` (needed to run Docker inside the runner)
 
     steps:
       - name: Checkout code
@@ -63,6 +61,11 @@ jobs:
               echo "Parentheses balanced for $file"
             fi
           done
+
+      - name: Pull MeTTaLog docker image
+        run: |
+          echo "Pulling indominyus/mettalog:latest"
+          docker pull indominyus/mettalog:latest
 
       - name: Run merge-demes mettalog inside docker
         # run mettalog inside the container image via docker run to ensure correct environment and mounts
