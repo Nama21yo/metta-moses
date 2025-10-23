@@ -24,10 +24,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Run mettalog test
-      #   run: |
-      #     pip3 install ansi2html
-      #     python3 scripts/run-tests.py
+      - name: Run mettalog test
+        run: |
+          pip3 install ansi2html
+          python3 scripts/run-tests.py
 
       - name: Run expand-demes mettalog
         run: |
