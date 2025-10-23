@@ -29,20 +29,46 @@ jobs:
           pip3 install ansi2html
           python3 scripts/run-tests.py
 
-      - name: Sanitize expand-demes test file
+      - name: Sanitize deme test files & check parentheses
         run: |
-          file=metta-moses/deme/tests/merge-demes-test.metta
-          if [ -f "$file" ]; then
-            if grep -qE 'bind! mega_table|\(mkITable' "$file"; then
-              echo "Sanitizing $file (commenting problematic lines matching bind! mega_table or (mkITable)"
-              # Prefix any line that contains "bind! mega_table" or "(mkITable" with a semicolon to comment it out.
-              sed -E -i 's/^(.*(bind! mega_table|\\(mkITable).*)$/; \1/' "$file"
-            else
-              echo "No known problematic patterns found in $file"
+          set -euo pipefail
+          files=(
+            "metta-moses/deme/tests/merge-demes-test.metta"
+            "metta-moses/deme/tests/expand-demes-test.metta"
+          )
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Skipping missing file: $file"
+              continue
             fi
-          else
-            echo "$file not found, skipping sanitize step"
-          fi
+            echo "Checking $file"
+            # count parentheses
+            open_parens=$(grep -o "(" "$file" | wc -l || true)
+            close_parens=$(grep -o ")" "$file" | wc -l || true)
+            echo "paren counts: ( = $open_parens , ) = $close_parens"
+            if [ "$open_parens" -ne "$close_parens" ]; then
+              echo "Unbalanced parentheses detected in $file — attempting to auto-sanitize known problematic patterns"
+              # comment lines that are commonly truncated and break parser
+              sed -E -i 's/^(.*(\!?\s*\(bind!\s+mega_table|\\(mkITable).*)$/; \1/' "$file" || true
+              # also comment any trailing line that looks like an unfinished form (ends with "(mkITable" or contains "mkITable" without closing paren)
+              tail -n 5 "$file"
+              # recompute counts
+              open_parens=$(grep -o "(" "$file" | wc -l || true)
+              close_parens=$(grep -o ")" "$file" | wc -l || true)
+              echo "after sanitize: ( = $open_parens , ) = $close_parens"
+              if [ "$open_parens" -ne "$close_parens" ]; then
+                echo "Auto-sanitize failed for $file. Showing diagnostics:"
+                echo "----- head -----"
+                head -n 80 "$file"
+                echo "----- tail -----"
+                tail -n 120 "$file"
+                echo "Please fix unmatched parentheses or unfinished forms in $file"
+                exit 1
+              fi
+            else
+              echo "Parentheses balanced for $file"
+            fi
+          done
 
       - name: Run expand-demes mettalog
         run: |
