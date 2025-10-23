@@ -30,6 +30,8 @@ jobs:
           python3 scripts/run-tests.py
 
       - name: Sanitize deme test files & check parentheses
+        # ensure bash is used (sh doesn't support "set -o pipefail")
+        shell: bash -l {0}
         run: |
           set -euo pipefail
           files=(
