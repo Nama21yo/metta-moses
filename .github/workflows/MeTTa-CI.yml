@@ -33,8 +33,8 @@ jobs:
         run: |
           set -euo pipefail
           files=(
-            "metta-moses/deme/tests/merge-demes-test.metta"
-            "metta-moses/deme/tests/expand-demes-testhbfsd.metta"
+            "deme/tests/merge-demes-test.metta"
+            "deme/tests/expand-demes-testhbfsd.metta"
           )
           for file in "${files[@]}"; do
             if [ ! -f "$file" ]; then
@@ -70,18 +70,18 @@ jobs:
       - name: Run merge-demes mettalog inside docker
         # run mettalog inside the container image via docker run to ensure correct environment and mounts
         run: |
-          if [ -f "metta-moses/deme/tests/merge-demes-test.metta" ]; then
+          if [ -f "deme/tests/merge-demes-test.metta" ]; then
             docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
-              sh -lc "mettalog metta-moses/deme/tests/merge-demes-test.metta" 2>mettalog-merge-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-merge-demes.err && exit 1)
+              sh -lc "mettalog deme/tests/merge-demes-test.metta" 2>mettalog-merge-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-merge-demes.err && exit 1)
           else
             echo "merge-demes-test.metta not found, skipping"
           fi
 
       - name: Run expand-demes mettalog inside docker (if present)
         run: |
-          if [ -f "metta-moses/deme/tests/expand-demes-testhbfsd.metta" ]; then
+          if [ -f "deme/tests/expand-demes-testhbfsd.metta" ]; then
             docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
-              sh -lc "mettalog metta-moses/deme/tests/expand-demes-testhbfsd.metta" 2>mettalog-expand-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-expand-demes.err && exit 1)
+              sh -lc "mettalog deme/tests/expand-demes-testhbfsd.metta" 2>mettalog-expand-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-expand-demes.err && exit 1)
           else
-            echo "expand-demes-test.metta not found, skipping"
+            echo "expand-demes-testhbfsd.metta not found, skipping"
           fi
