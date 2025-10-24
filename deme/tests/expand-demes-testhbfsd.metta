@@ -246,9 +246,9 @@
 ; Killed
 
 ; with OR table and AND init exemplar     
-! (runMoses 2 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
+! (runMoses 1 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
     False    ;; the new arguments for prune-exemplar -- we are saying dont prune the exemplar
-    hc      ;; the new arguments for feature selection algo
+    rd      ;; the new arguments for feature selection algo
     ortable hillClimbing 5 2 0 1 orttable 3 0.004 1000 mi)
 
 ; ! (runMoses 2 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
