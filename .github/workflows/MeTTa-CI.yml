@@ -81,7 +81,7 @@ jobs:
         run: |
           if [ -f "deme/tests/expand-demes-testhbfsd.metta" ]; then
             docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
-              sh -lc "ls -la /src && mettalog deme/tests/expand-demes-testhbfsd.metta" 2>mettalog-expand-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-expand-demes.err && exit 1)
+              sh -lc "ls -la /src && time mettalog deme/tests/expand-demes-testhbfsd.metta" 2>mettalog-expand-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-expand-demes.err && exit 1)
           else
             echo "expand-demes-testhbfsd.metta not found, skipping"
           fi
