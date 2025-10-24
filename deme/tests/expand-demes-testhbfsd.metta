@@ -134,24 +134,24 @@
 ! (bind! bigtablet (createTruthTableBScore 2 bigtable))                        
 
 ! (bind! bigtable2 (mkITable
-                        (Cons (Cons True  (Cons False (Cons True  (Cons False (Cons True  (Cons True  Nil))))))
-                        (Cons (Cons False (Cons True  (Cons False (Cons True  (Cons False (Cons False Nil))))))
-                        (Cons (Cons True  (Cons True  (Cons True  (Cons False (Cons False (Cons True  Nil))))))
-                        (Cons (Cons False (Cons False (Cons True  (Cons True  (Cons True  (Cons True  Nil))))))
-                        (Cons (Cons True  (Cons False (Cons False (Cons True  (Cons True  (Cons False Nil))))))
-                        (Cons (Cons False (Cons True  (Cons True  (Cons True  (Cons False (Cons True  Nil))))))
-                        (Cons (Cons True  (Cons True  (Cons False (Cons False (Cons True  (Cons True  Nil))))))
-                        (Cons (Cons False (Cons False (Cons False (Cons True  (Cons False (Cons False Nil))))))
-                        (Cons (Cons True  (Cons True  (Cons True  (Cons True  (Cons True  (Cons True  Nil))))))
-                        (Cons (Cons False (Cons True  (Cons False (Cons False (Cons True  (Cons False Nil))))))
-                        (Cons (Cons True  (Cons False (Cons True  (Cons True  (Cons False (Cons True  Nil))))))
-                        (Cons (Cons False (Cons False (Cons True  (Cons False (Cons True  (Cons False Nil))))))
-                        (Cons (Cons True  (Cons True  (Cons False (Cons True  (Cons False (Cons True  Nil))))))
-                        (Cons (Cons False (Cons True  (Cons True  (Cons False (Cons True  (Cons True  Nil))))))
-                        (Cons (Cons True  (Cons False (Cons False (Cons False (Cons False (Cons False Nil))))))
-                        (Cons (Cons False (Cons False (Cons False (Cons True  (Cons True  (Cons True  Nil)))))) Nil))))))))))))))))
+        (Cons (Cons True  (Cons False (Cons True  (Cons False (Cons True  (Cons True  Nil))))))
+        (Cons (Cons False (Cons True  (Cons False (Cons True  (Cons False (Cons False Nil))))))
+        (Cons (Cons True  (Cons True  (Cons True  (Cons False (Cons False (Cons True  Nil))))))
+        (Cons (Cons False (Cons False (Cons True  (Cons True  (Cons True  (Cons True  Nil))))))
+        (Cons (Cons True  (Cons False (Cons False (Cons True  (Cons True  (Cons False Nil))))))
+        (Cons (Cons False (Cons True  (Cons True  (Cons True  (Cons False (Cons True  Nil))))))
+        (Cons (Cons True  (Cons True  (Cons False (Cons False (Cons True  (Cons True  Nil))))))
+        (Cons (Cons False (Cons False (Cons False (Cons True  (Cons False (Cons False Nil))))))
+        (Cons (Cons True  (Cons True  (Cons True  (Cons True  (Cons True  (Cons True  Nil))))))
+        (Cons (Cons False (Cons True  (Cons False (Cons False (Cons True  (Cons False Nil))))))
+        (Cons (Cons True  (Cons False (Cons True  (Cons True  (Cons False (Cons True  Nil))))))
+        (Cons (Cons False (Cons False (Cons True  (Cons False (Cons True  (Cons False Nil))))))
+        (Cons (Cons True  (Cons True  (Cons False (Cons True  (Cons False (Cons True  Nil))))))
+        (Cons (Cons False (Cons True  (Cons True  (Cons False (Cons True  (Cons True  Nil))))))
+        (Cons (Cons True  (Cons False (Cons False (Cons False (Cons False (Cons False Nil))))))
+        (Cons (Cons False (Cons False (Cons False (Cons True  (Cons True  (Cons True  Nil)))))) Nil))))))))))))))))
 
-                        (Cons A (Cons B (Cons C (Cons D (Cons E (Cons T Nil))))))))
+        (Cons A (Cons B (Cons C (Cons D (Cons E (Cons T Nil))))))))
 
 ! (bind! bigtablet2 (createTruthTableBScore 2 bigtable2))                        
 
@@ -246,9 +246,9 @@
 ; Killed
 
 ; with OR table and AND init exemplar     
-! (runMoses 3 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
+! (runMoses 7 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
     False    ;; the new arguments for prune-exemplar -- we are saying dont prune the exemplar
-    sim      ;; the new arguments for feature selection algo
+    smd      ;; the new arguments for feature selection algo
     bigtablet2 hillClimbing 5 2 0 1 bigtable2 3 0.004 1000 mi)
 ; ! (runMoses 2 (mkCscore -0.1 2 0.1 0.1 3) 3 metaPop2 0 2 
 ;     False    ;; the new arguments for prune-exemplar -- we are saying dont prune the exemplar
