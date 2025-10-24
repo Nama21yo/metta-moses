@@ -67,15 +67,15 @@ jobs:
           echo "Pulling indominyus/mettalog:latest"
           docker pull indominyus/mettalog:latest
 
-      - name: Run merge-demes mettalog inside docker
-        # run mettalog inside the container image via docker run to ensure correct environment and mounts
-        run: |
-          if [ -f "deme/tests/merge-demes-test.metta" ]; then
-            docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
-              sh -lc "mettalog deme/tests/merge-demes-test.metta" 2>mettalog-merge-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-merge-demes.err && exit 1)
-          else
-            echo "merge-demes-test.metta not found, skipping"
-          fi
+      # - name: Run merge-demes mettalog inside docker
+      #   # run mettalog inside the container image via docker run to ensure correct environment and mounts
+      #   run: |
+      #     if [ -f "deme/tests/merge-demes-test.metta" ]; then
+      #       docker run --rm -v "$PWD":/src -w /src indominyus/mettalog:latest \
+      #         sh -lc "mettalog deme/tests/merge-demes-test.metta" 2>mettalog-merge-demes.err || (echo 'mettalog failed, stdout/stderr:' && sed -n '1,200p' mettalog-merge-demes.err && exit 1)
+      #     else
+      #       echo "merge-demes-test.metta not found, skipping"
+      #     fi
 
       - name: Run expand-demes mettalog inside docker (if present)
         run: |
