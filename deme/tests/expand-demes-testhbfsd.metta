@@ -1,4 +1,4 @@
-(register-module! ../metta-moses)
+(register-module! .)
 !(import! &self metta-moses:representation:lsk)
 !(import! &self metta-moses:representation:instance)
 !(import! &self metta-moses:representation:build-knobs)
